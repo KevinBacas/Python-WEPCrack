@@ -3,11 +3,12 @@ import subprocess
 import xml.etree.ElementTree as ET
 from test import network_listening
 from wifiBox import wifiBox 
+from wifiBox import client_wifi
 
 nom_ecoute = "record"
-version = "-02"
-nom_fichier_xml = nom_ecoute + version + ".kismet.netxml"
-tree = ET.parse(nom_fichier_xml)
+version = "-03"
+nom_fichier_xml_ecoute_global = nom_ecoute + version + ".kismet.netxml"
+tree = ET.parse(nom_fichier_xml_ecoute_global)
 root = tree.getroot()
 tab_wep = []
 tab_wpa = []
@@ -44,7 +45,7 @@ for child in root:
 print "wep"
 tab_wep = sorted(tab_wep, sup)
 for box in tab_wep:
-	nom_dir = box._ESSID
+	nom_dir = "TestBox/" + box._ESSID
 	dir_path = nom_dir
 	if not os.path.isdir(dir_path):
 		os.mkdir(dir_path)
@@ -53,8 +54,24 @@ print ""
 print "wpa"
 tab_wpa = sorted(tab_wpa, sup)
 for box in tab_wpa:
-	nom_dir = box._ESSID
+	tab_client = []
+	nom_dir = "TestBox/" +box._ESSID
 	dir_path = nom_dir
 	if not os.path.isdir(dir_path):
 		os.mkdir(dir_path)
 	network_listening(box)
+	nom_fichier_xml_ecoute_local = nom_dir + "/" + nom_ecoute + "-01.kismet.netxml"
+	print nom_fichier_xml_ecoute_local
+	sub_tree = ET.parse(nom_fichier_xml_ecoute_local)
+	sub_root = sub_tree.getroot()
+	for child in sub_root:
+		for c_tmp in child.findall('wireless-client'):
+			mac_client = c_tmp.find('client-mac').text
+			client = client_wifi(mac_client)
+			tab_client.append(client)
+	print "box"
+	box.display()
+	print "client :"
+	for c in tab_client:
+		c.display()
+	print ""

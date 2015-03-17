@@ -23,9 +23,10 @@ class wifiBox:
         else:
             return wifiBox
 
-def abs( nombre ):
-    if nombre < 0:
-        return -1*nombre
-    else:
-        return nombre
 
+class client_wifi:
+    def __init__(self, MAC_CLIENT):
+        self._MAC_CLIENT = MAC_CLIENT
+
+    def display(self):
+        print self._MAC_CLIENT
