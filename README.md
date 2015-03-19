@@ -1,7 +1,6 @@
 # Python-WEPCrack
 A script in Python using Aircrack-ng suite for WEP security
 
-Developers : 
+Developers :
 - Kévin BACAS
 - Louis DELBOSC
-
