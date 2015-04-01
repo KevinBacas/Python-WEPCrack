@@ -10,17 +10,18 @@ import os
 import signal
 
 if __name__ == '__main__':
+    print "QQ"
     print "Mise en place du monitoring"
     monitoring()
     # On effectue une écoute globale
     print "Début de l'écoute globale"
-    dir_path = "TestBox"
+    dir_path = "TestBox/global"
     if not os.path.isdir(dir_path):
         os.mkdir(dir_path)
     global_pid = global_listening()
     lm_wep = ListeningManager()
     cpt = 0
-    while cpt != 12 * 60 * 2:
+    while cpt != 12 * 60:
         sleep(5)
         parsing_global()
         wep_list = prepare_wep_listining()
