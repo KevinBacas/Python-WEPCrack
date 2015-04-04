@@ -20,7 +20,10 @@ class ListeningManager():
     def updateListening(self):
         tmpTable = self.networkTable[:self.maxListening]
         for network in tmpTable:
-            tmp_network = WEPListening(network)
+            if tmp_network._Encryption.find('WEP') != -1 :
+                tmp_network = WEPListening(network)
+            elif tmp_network._Encryption.find('WPA') != -1 :
+                tmp_network = WPAListening(network)
             if tmp_network not in self.listeningList:
                 self.listeningList.append(tmp_network)
                 tmp_network.startListening()
