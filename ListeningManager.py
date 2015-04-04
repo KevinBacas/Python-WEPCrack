@@ -81,7 +81,7 @@ class WEPListening():
 		tab_client.append(client)
 	for i in xrange(10) :
 	    for client in tab_client :
-		deauthentification_attack(self.box, client)
+		deauthentication_attack(self.box, client)
 		time.sleep(5)
 
     def stopListening(self):
