@@ -7,9 +7,23 @@ from parseXML import parsing_global, prepare_wep_listining
 from ListeningManager import ListeningManager
 from time import sleep
 import os
-import signal
+import signal, sys
+
+import sys, signal, time
+
+lm_wep = ListeningManager()
+global_pid = -1
+
+def handler(signum = None, frame = None):
+    print 'Signal handler called with signal', signum
+    lm_wep.destroy()
+    os.killpg(global_pid, signal.SIGTERM)
+    sys.exit(0)
 
 if __name__ == '__main__':
+    for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT, signal.SIGKILL]:
+        signal.signal(sig, handler)
+
     print "QQ"
     print "Mise en place du monitoring"
     monitoring()
@@ -29,5 +43,4 @@ if __name__ == '__main__':
         lm_wep.display()
         lm_wep.updateListening()
         cpt = cpt + 1
-    os.killpg(global_pid, signal.SIGTERM)
-    lm_wep.destroy()
+    print "End of the program"
