@@ -92,3 +92,22 @@ class WEPListening():
 
     def __eq__(self, other):
         return self.box == other.box
+
+class WPAListening():
+	def __init__(self,box):
+		self.box = box
+		self.focus_listen_pid = -1
+		self.aircrack_pid = -1
+
+	def startListening(self):
+		print "Starting... %s" % (self.box)
+		self.focus_listen_pid = network_listening(self.box)
+		# TODO : lancer aircrack jusqu'a ce que ca marche (ie on chope une handshake)
+
+	def stopListening(self):
+		print "Stroping %s" % (self.box)
+		os.killpg(self.focus_listen_pid, signal.SIGTERM)
+		os.killpg(self.aircrack_pid, signal.SIGKILL)
+
+	def __eq__(sefl, other):
+		return self.box == other.box
