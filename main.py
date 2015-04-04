@@ -27,7 +27,7 @@ def handler(signum = None, frame = None):
     logging.warning('Signal handler called with signal')
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='wifisecure.log', level=logging.INFO, format='[%(asctime)s]: %(message)s', datefmt='%m/%d %I:%M:%S')
+    logging.basicConfig(filename='wifisecure.log', level=logging.INFO, format='[%(levelname)s|%(asctime)s]: %(message)s', datefmt='%m/%d %I:%M:%S')
     for sig in signals:
         signal.signal(sig, handler)
 
@@ -44,6 +44,7 @@ if __name__ == '__main__':
             parsing_global()
             wep_list = prepare_wep_listining()
             lm_wep.updateNetworkTable(wep_list)
+            lm_wep.updateListening()
             lm_wep.display()
 
         lm_wep.destroy()

