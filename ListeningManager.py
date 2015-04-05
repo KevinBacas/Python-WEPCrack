@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from utils import network_listening, arp_attack, keep_alive_packet
+from utils import network_listening, arp_attack, keep_alive_packet, result_aircrack_wep, result_aircrack_wpa
+import threading
 import xml.etree.ElementTree as ET
 import os
 import signal
@@ -61,10 +62,14 @@ class WEPListening():
 
     def startListening(self):
         print "Starting... %s" % (self.box)
+        dir_name = "TestBox"
+        path = dir_name + "/" + box._ESSID
         self.focus_listen_pid = network_listening(self.box)
         keep_alive_packet(self.box)
         self.arp_pid = arp_attack(self.box)
         #<self.speed_up_process(self.box)
+        t_launch_aircrack = threading.Thread(target=result_aircrack_wep, args=(path,))
+        t_launch_aircrack.start()
 
     """ forte probabilit� de necessite de debugger ce code
         process de deauthentification pour accelerer l'obtiention d'iv
@@ -104,8 +109,11 @@ class WPAListening():
 
 	def startListening(self):
 		print "Starting... %s" % (self.box)
+        dir_name = "TestBox"
+        path = dir_name + "/" + box._ESSID
 		self.focus_listen_pid = network_listening(self.box)
-		# TODO : lancer aircrack jusqu'a ce que ca marche (ie on chope une handshake)
+        t_launch_aircrack = threading.Thread(target=result_aircrack_wpa, args=(path,))
+        t_launch_aircrack.start()
 
 	def stopListening(self):
 		print "Stroping %s" % (self.box)
