@@ -1,7 +1,7 @@
-ListeningManager
-================
+Utils
+=====
 
-.. automodule:: ListeningManager
+.. automodule:: utils
     :members:
     :undoc-members:
     :inherited-members:

@@ -11,6 +11,10 @@ Contents:
 .. toctree::
 
    ListeningManager
+   parseXML
+   utils
+   wifiBox
+   main
 
 
 Indices and tables

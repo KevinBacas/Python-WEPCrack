@@ -1,7 +1,7 @@
-ListeningManager
-================
+ParseXML
+========
 
-.. automodule:: ListeningManager
+.. automodule:: parseXML
     :members:
     :undoc-members:
     :inherited-members:

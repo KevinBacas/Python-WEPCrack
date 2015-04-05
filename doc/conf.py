@@ -389,12 +389,12 @@ autoclass_content = 'both'
 
 
 pdf_documents = [
-('index', u'EMSDocumentation', u'EMS Documentation', u'Thyag Sundaramoorthy'),
+('index', u'WifiSecure Documentation', u'WifiSecure Documentation', u'Kévin BACAS & Louis DELBOSC'),
 ]
 
 
 # A comma-separated list of custom stylesheets. Example:
-pdf_stylesheets = ['sphinx','kerning','a4']
+pdf_stylesheets = ['sphinx', 'serif', 'kerning', 'a4']
 
 
 # A list of folders to search for stylesheets. Example:
@@ -412,7 +412,7 @@ pdf_style_path = ['.', '_styles']
 
 
 # Language to be used for hyphenation support
-#pdf_language = "en_US"
+pdf_language = "en_US"
 
 
 # Mode for literal blocks wider than the frame. Can be
@@ -423,12 +423,12 @@ pdf_style_path = ['.', '_styles']
 # Section level that forces a break page.
 # For example: 1 means top-level sections start in a new page
 # 0 means disabled
-#pdf_break_level = 0
+pdf_break_level = 1
 
 
 # When a section starts in a new page, force it to be 'even', 'odd',
 # or just use 'any'
-#pdf_breakside = 'any'
+pdf_breakside = 'even'
 
 
 # Insert footnotes where they are defined instead of
@@ -466,20 +466,20 @@ pdf_style_path = ['.', '_styles']
 
 
 # Set the default DPI for images
-#pdf_default_dpi = 72
+pdf_default_dpi = 72
 
 
 # Enable rst2pdf extension modules (default is only vectorpdf)
 # you need vectorpdf if you want to use sphinx's graphviz support
-#pdf_extensions = ['vectorpdf']
+pdf_extensions = ['vectorpdf']
 
 
 # Page template name for "regular" pages
-#pdf_page_template = 'cutePage'
+pdf_page_template = 'cutePage'
 
 
 # Show Table Of Contents at the beginning?
-#pdf_use_toc = True
+pdf_use_toc = True
 
 
 # How many levels deep should the table of contents be?

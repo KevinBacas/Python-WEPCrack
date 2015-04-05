@@ -1,7 +1,7 @@
-ListeningManager
-================
+WifiBox
+=======
 
-.. automodule:: ListeningManager
+.. automodule:: wifiBox
     :members:
     :undoc-members:
     :inherited-members:

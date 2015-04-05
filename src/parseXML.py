@@ -10,16 +10,18 @@ from wifiBox import client_wifi
 import logging
 
 """
-Initialisation des path/noms fichier
 Creation des elements pour parser/stocker les donnes
 """
 tab_mixte = []
 
 
-"""
-fonction de comparaison pour trier les wifiBox
-"""
+
 def sup(box_1,box_2):
+    """
+    Compare two WifiBox instance
+
+    .. note:: A x10 factor is applyed to WEP Wi-FI because they're easyier to Hack
+    """
     wep_factor = 10
     data1 = abs( box_1._Data )
     pow1 = abs(box_1._PWR)
