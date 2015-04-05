@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from utils import network_listening, arp_attack, keep_alive_packet
+from utils import network_listening, arp_attack, keep_alive_packet, result_aircrack_wep, result_aircrack_wpa
+import threading
 import xml.etree.ElementTree as ET
 import os
 import signal
@@ -82,9 +83,10 @@ class WEPListening():
         .. note:: It creates also 3 fields to handle the pids of processing threads
         """
         self.box = box
-        self.focus_listen_pid = -1
-        self.arp_pid = -1
-        self.keep_alive_pid = -1
+        self.focus_listen_pid = None
+        self.arp_pid = None
+        self.keep_alive_pid = None
+        self.aircrack_thread = None
 
     def startListening(self):
         logging.info("Starting listening on %s", self.box._ESSID)
@@ -94,7 +96,8 @@ class WEPListening():
         self.focus_listen_pid = network_listening(self.box)
         self.keep_alive_pid = keep_alive_packet(self.box)
         self.arp_pid = arp_attack(self.box)
-        self.speed_up_process(self.box)
+        self.aircrack_thread = threading.Thread(target=result_aircrack_wpa, args=(dir_path,))
+        self.aircrack_thread.start()
 
     """ forte probabilit� de necessite de debugger ce code
         process de deauthentification pour accelerer l'obtiention d'iv
@@ -143,8 +146,8 @@ class WPAListening():
         .. note:: It creates also 2 fields to handle the pids of processing threads
         """
         self.box = box
-        self.focus_listen_pid = -1
-        self.aircrack_pid = -1
+        self.focus_listen_pid = None
+        self.aircrack_thread = None
 
     def startListening(self):
         logging.info("Starting listening on %s", self.box._ESSID)
@@ -152,7 +155,8 @@ class WPAListening():
         if not os.path.isdir(dir_path):
             os.mkdir(dir_path)
         self.focus_listen_pid = network_listening(self.box)
-        # TODO : lancer aircrack jusqu'a ce que ca marche (ie on chope une handshake)
+        self.aircrack_thread = threading.Thread(target=result_aircrack_wpa, args=(dir_path,))
+        self.aircrack_thread.start()
 
     def update(self):
         pass
@@ -160,7 +164,7 @@ class WPAListening():
     def stopListening(self):
         logging.info("Stopping listening on %s", self.box._ESSID)
         os.killpg(self.focus_listen_pid, signal.SIGTERM)
-        # os.killpg(self.aircrack_pid, signal.SIGKILL)
+        self.aircrack_thread.stop()
 
     def __eq__(self, other):
         return self.box == other.box

