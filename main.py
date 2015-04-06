@@ -45,7 +45,6 @@ if __name__ == '__main__':
             wep_list = prepare_wep_listining()
             lm_wep.updateNetworkTable(wep_list)
             lm_wep.updateListening()
-            lm_wep.display()
 
         lm_wep.destroy()
         os.killpg(global_pid, signal.SIGTERM)

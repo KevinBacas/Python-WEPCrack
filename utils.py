@@ -7,6 +7,7 @@ import signal
 import subprocess
 import logging
 import threading
+import re
 
 """
     Pour lancer mettre la clé wifi en monitoring (devient alors mon0)
@@ -128,7 +129,7 @@ def result_aircrack_wep(data_file_path):
         KEY = get_key(datafile_path)
         time.sleep(5)
     os.remove(key_file_name)
-    cmd = "echo \" WEP_box_path : " + datafile_path " with key " + KEY + "\" >> key.result"
+    cmd = "echo \" WEP_box_path : " + datafile_path + " with key " + KEY + "\" >> key.result"
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
     return pro.pid
@@ -139,26 +140,30 @@ def result_aircrack_wpa(datafile_path):
     KEY = ""
     while KEY == "" :
         if t_aircrack.isAlive() == False :
+            logging.warning("%s n'a pas reussi à lancer Aircrack-ng", datafile_path)
             print 'Lancement de aircrack-ng'
             t_aircrack = threading.Thread(target=aircrack_final_wpa, args=(datafile_path,))
             t_aircrack.start()
         KEY = get_key(datafile_path)
         time.sleep(5)
     os.remove(key_file_name)
-    cmd = "echo \" WPA_box_path : " + datafile_path " with key " + KEY + "\" >> key.result"
+    cmd = "echo \" WPA_box_path : " + datafile_path + " with key " + KEY + "\" >> key.result"
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
     return pro.pid
 
 def get_key(datafile_path):
     file_name = datafile_path + ".result"
-    fichier = open(file_name, 'r')
     key = ""
     pattern = re.compile("KEY FOUND! \[ [^!]+ \]")
-    file_line = fichier.readline()
-    while file_line != "" and key == "":
-        res = pattern.search(file_line)
-        if res != None:
-            key = file_line[res.start():res.end()]
+    try:
+        fichier = open(file_name, 'r')
         file_line = fichier.readline()
+        while file_line != "" and key == "":
+            res = pattern.search(file_line)
+            if res != None:
+                key = file_line[res.start():res.end()]
+            file_line = fichier.readline()
+    except:
+        pass
     return key
