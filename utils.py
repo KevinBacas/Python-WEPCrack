@@ -108,7 +108,7 @@ def aircrack_final_wpa(datafile_path):
 
     FNULL = open(os.devnull, 'w')
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
-    return pro.pid
+    return pro
 
 def deauthentication_attack(box, client):
     BSSID = box._BSSID
@@ -144,7 +144,7 @@ def result_aircrack_wpa(datafile_path):
             print 'Lancement de aircrack-ng'
             t_aircrack = threading.Thread(target=aircrack_final_wpa, args=(datafile_path,))
             t_aircrack.start()
-        KEY = get_key(datafile_path)
+        KEY = get_key(key_file_name)
         time.sleep(5)
     os.remove(key_file_name)
     cmd = "echo \" WPA_box_path : " + datafile_path + " with key " + KEY + "\" >> key.result"
@@ -152,8 +152,7 @@ def result_aircrack_wpa(datafile_path):
     pro = subprocess.Popen(cmd, stdout=FNULL, shell=True, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
     return pro.pid
 
-def get_key(datafile_path):
-    file_name = datafile_path + ".result"
+def get_key(file_name):
     key = ""
     pattern = re.compile("KEY FOUND! \[ [^!]+ \]")
     try:
