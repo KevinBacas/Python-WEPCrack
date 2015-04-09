@@ -1,7 +1,7 @@
-Utils
-=====
+WEPListening
+============
 
-.. automodule:: Utils
+.. automodule:: WEPListening
     :members:
     :undoc-members:
     :inherited-members:

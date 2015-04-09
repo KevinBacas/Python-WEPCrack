@@ -1,7 +1,7 @@
-Utils
-=====
+WPAListening
+============
 
-.. automodule:: Utils
+.. automodule:: WPAListening
     :members:
     :undoc-members:
     :inherited-members:

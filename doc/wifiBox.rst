@@ -1,7 +1,7 @@
 WifiBox
 =======
 
-.. automodule:: wifiBox
+.. automodule:: WifiBox
     :members:
     :undoc-members:
     :inherited-members:

@@ -1,7 +1,7 @@
-Utils
-=====
+WEPThread
+=========
 
-.. automodule:: Utils
+.. automodule:: WEPThread
     :members:
     :undoc-members:
     :inherited-members:

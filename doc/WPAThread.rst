@@ -1,7 +1,7 @@
-Utils
-=====
+WPAThread
+=========
 
-.. automodule:: Utils
+.. automodule:: WPAThread
     :members:
     :undoc-members:
     :inherited-members:

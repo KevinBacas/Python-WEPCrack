@@ -1,7 +1,7 @@
 ParseXML
 ========
 
-.. automodule:: parseXML
+.. automodule:: ParseXML
     :members:
     :undoc-members:
     :inherited-members:

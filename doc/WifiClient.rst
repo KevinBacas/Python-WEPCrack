@@ -1,7 +1,7 @@
-Utils
-=====
+WifiClient
+==========
 
-.. automodule:: Utils
+.. automodule:: WifiClient
     :members:
     :undoc-members:
     :inherited-members:
