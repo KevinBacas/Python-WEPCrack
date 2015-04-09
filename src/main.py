@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from wifiBox import client_wifi, wifiBox
-from utils import global_listening, monitoring
-from parseXML import parsing_global, prepare_wep_listining
+from WifiBox import WifiBox
+from Utils import global_listening, monitoring
+from ParseXML import parsing_global, prepare_wep_listining
 from ListeningManager import ListeningManager
 import time
 import os
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     found_wlan = monitoring()
     if(found_wlan):
         logging.info("Stating global_listening..")
-        dir_path = "TestBox/global"
+        dir_path = "TestBox/"
         if not os.path.isdir(dir_path):
             os.mkdir(dir_path)
         global_pid = global_listening()
@@ -45,7 +45,6 @@ if __name__ == '__main__':
             wep_list = prepare_wep_listining()
             lm_wep.updateNetworkTable(wep_list)
             lm_wep.updateListening()
-            lm_wep.display()
 
         lm_wep.destroy()
         os.killpg(global_pid, signal.SIGTERM)

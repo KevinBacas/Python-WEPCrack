@@ -5,8 +5,7 @@ import os
 import subprocess
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import ParseError
-from wifiBox import wifiBox
-from wifiBox import client_wifi
+from WifiBox import WifiBox
 import logging
 
 """
@@ -47,7 +46,7 @@ def sup(box_1,box_2):
 def parsing_global():
     """
     Parsing du fichier xml d'écoute global
-    stockage des wifiBox dans deux tableaux, tab_wep et tab_wpa
+    stockage des WifiBox dans deux tableaux, tab_wep et tab_wpa
     les autres ne sont pas garder en mémoire
     """
     nom_ecoute = "TestBox/global/record"
@@ -65,7 +64,7 @@ def parsing_global():
                 Channel = int(child.find('channel').text)
                 PWR = int(child.find('snr-info').find('last_signal_dbm').text)
                 if BSSID != "None" and str(ESSID) != "None":
-                    nouveau_reseau = wifiBox(BSSID, ESSID, Encryption, Data, Channel, PWR)
+                    nouveau_reseau = WifiBox(BSSID, ESSID, Encryption, Data, Channel, PWR)
                     if nouveau_reseau in tab_mixte:
                         index = tab_mixte.index(nouveau_reseau)
                         tab_mixte[index] = nouveau_reseau

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-class wifiBox:
+class WifiBox:
     """
     Classe capturant les informations utiles lors d'une écoute globale.
     """
@@ -35,13 +35,3 @@ class wifiBox:
 
     def __eq__(self, other):
         return self._ESSID == other._ESSID
-
-class client_wifi:
-    """
-    Classe capturant les informations utiles lors d'une écoute local
-    """
-    def __init__(self, MAC_CLIENT):
-        self._MAC_CLIENT = MAC_CLIENT
-
-    def display(self):
-        print self._MAC_CLIENT
