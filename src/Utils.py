@@ -11,7 +11,7 @@ import re
 
 def monitoring():
     """
-	Start the monitoring
+    Start the monitoring
     """
     res = False
     logging.info("Running 'airmong-ng'..")
@@ -35,8 +35,8 @@ def monitoring():
 
 def global_listening():
     """
-	gobal listening
-	Start airodump-ng
+    gobal listening
+    Start airodump-ng
     """
     logging.info("Global listening. File are recorded into TestBox/global folder.")
     cmd = "airodump-ng -w TestBox/global/record mon0"
@@ -46,8 +46,8 @@ def global_listening():
 
 def network_listening(registered_network):
     """
-	private listening (on one box only)
-	:param registered_network: box (network) we are listening
+    private listening (on one box only)
+    :param registered_network: box (network) we are listening
     """
     BSSID = registered_network._BSSID
     ESSID = registered_network._ESSID
@@ -63,8 +63,8 @@ def network_listening(registered_network):
 
 def keep_alive_packet(box):
     """
-	create a link between the box and us to increase of chance of success
-	:param box: box we are trying to be linked with
+    create a link between the box and us to increase of chance of success
+    :param box: box we are trying to be linked with
     """
     BSSID = box._BSSID
     ESSID = box._ESSID
@@ -76,8 +76,8 @@ def keep_alive_packet(box):
 
 def arp_attack(registered_network):
     """
-	start of the arp attack
-	:param registered_network: box (network) we are attacking
+    start of the arp attack
+    :param registered_network: box (network) we are attacking
     """
     BSSID = registered_network._BSSID
     ESSID = registered_network._ESSID
@@ -92,9 +92,9 @@ def arp_attack(registered_network):
 
 def deauthentication_attack(box, client):
     """
-	start a deauthentication attack to generate traffic
-	:param box: box we are attacking
-	:param box: client who is attacked
+    start a deauthentication attack to generate traffic
+    :param box: box we are attacking
+    :param box: client who is attacked
     """
     BSSID = box._BSSID
     mac_client = client._MAC_CLIENT
@@ -107,9 +107,9 @@ def deauthentication_attack(box, client):
 
 def result_aircrack_wep(data_file_path):
     """
-	obsolete
-	start to find the key and if found, write it in key.result
-	:param datafile_path: the path to the box directory
+    obsolete
+    start to find the key and if found, write it in key.result
+    :param datafile_path: the path to the box directory
     """
     t_aircrack = threading.Thread(target=aircrack_final_wep, args=(datafile_path,))
     key_file_name = datafile_path + ".result"
@@ -126,9 +126,9 @@ def result_aircrack_wep(data_file_path):
 
 def result_aircrack_wpa(datafile_path):
     """
-	obsolete
-	start to find the key and if found, write it in key.result
-	:param datafile_path: the path to the box directory
+    obsolete
+    start to find the key and if found, write it in key.result
+    :param datafile_path: the path to the box directory
     """
     t_aircrack = threading.Thread(target=aircrack_final_wpa, args=(datafile_path,))
     key_file_name = datafile_path + ".result"
@@ -148,8 +148,8 @@ def result_aircrack_wpa(datafile_path):
 
 def aircrack_final_wep(datafile_path):
     """
-	start to find the key and if found, write it in key.result
-	:param datafile_path: the path to the box directory
+    start to find the key and if found, write it in key.result
+    :param datafile_path: the path to the box directory
     """
     logging.info("Applying aircrack for WEP on %s", datafile_path)
     cmd = "aircrack-ng " + datafile_path + "/*.cap > " + datafile_path + ".result"
@@ -160,8 +160,8 @@ def aircrack_final_wep(datafile_path):
 
 def aircrack_final_wpa(datafile_path):
     """
-	start to find the key and if found, write it in key.result
-	:param datafile_path: the path to the box directory
+    start to find the key and if found, write it in key.result
+    :param datafile_path: the path to the box directory
     """
     logging.info("Applying aircrack for WPA on %s", datafile_path)
     cmd = "aircrack-ng -w dictionnaire/test " + datafile_path + "/*.cap > " +  datafile_path + ".result"
@@ -172,8 +172,8 @@ def aircrack_final_wpa(datafile_path):
 
 def get_key(datafile_path):
     """
-	search if the key is found in a file
-	:param datafile_path: The path to the file in the box directory
+    search if the key is found in a file
+    :param datafile_path: The path to the file in the box directory
     """
     file_name = datafile_path + ".result"
     key = ""

@@ -29,9 +29,9 @@ class WEPListening():
         self.aircrack_thread = None
 
     def startListening(self):
-		"""
-		start the listening and execute all the processes to attack a network
-		"""
+        """
+        start the listening and execute all the processes to attack a network
+        """
         logging.info("Starting listening on %s", self.box._ESSID)
         dir_path = "TestBox/" + self.box._ESSID
         if not os.path.isdir(dir_path):
@@ -44,8 +44,8 @@ class WEPListening():
 
     def speed_up_process(self, box):
         """
-		deauthentification the clients to generate packets to catch
-		:param box: The box to crack
+        deauthentification the clients to generate packets to catch
+        :param box: The box to crack
         """
         tab_client = []
         dir_name = "TestBox"
@@ -70,9 +70,9 @@ class WEPListening():
         self.speed_up_process(self.box)
 
     def stopListening(self):
-		"""
-		close all the processes and stop the listening
-		"""
+        """
+        close all the processes and stop the listening
+        """
         logging.info("Stopping listening on %s...", self.box._ESSID)
         try:
             os.killpg(self.focus_listen_pid, signal.SIGTERM)
@@ -90,8 +90,8 @@ class WEPListening():
         logging.info("Listening on %s stopped !", self.box._ESSID)
 
     def __eq__(self, other):
-		"""
-		Check if two box are equal
-		:param box: the box you're comparing with
-		"""
+        """
+        Check if two box are equal
+        :param box: the box you're comparing with
+        """
         return self.box == other.box

@@ -18,8 +18,8 @@ tab_mixte = []
 def sup(box_1,box_2):
     """
     Compare two WifiBox instance
-	:param box_1: first box you want to compare
-	:param box_2: second box you want to compare
+    :param box_1: first box you want to compare
+    :param box_2: second box you want to compare
 
     .. note:: A x10 factor is applyed to WEP Wi-FI because they're easyier to Hack
     """
@@ -47,9 +47,9 @@ def sup(box_1,box_2):
 
 def parsing_global():
     """
-	Parsing of the xml file from global_listening
-	stock each WPA and WEP networks in tab_mixte
-	Other boxes are not keep in memory 
+    Parsing of the xml file from global_listening
+    stock each WPA and WEP networks in tab_mixte
+    Other boxes are not keep in memory 
     """
     nom_ecoute = "TestBox/global/record"
     version = "-01"
@@ -78,7 +78,7 @@ def parsing_global():
 
 def prepare_wep_listining():
     """
-	sorte tab_mixte with sup function
+    sorte tab_mixte with sup function
     """
     global tab_mixte
     tab_mixte = sorted(tab_mixte, sup)

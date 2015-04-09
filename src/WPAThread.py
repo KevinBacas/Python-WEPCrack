@@ -12,16 +12,16 @@ from Utils import aircrack_final_wpa, get_key
 
 
 class WPAThread(threading.Thread):
-	"""
-	WPAThread is specific class to handle the threads generate to crack the key while
-	the WPA network is being attacked
-	"""
+    """
+    WPAThread is specific class to handle the threads generate to crack the key while
+    the WPA network is being attacked
+    """
     def __init__(self, box, datafile_path, name='WPA_thread'):
-		"""
-		:param box: The box to crack
-		:param datafile_path: The path to the box directory
-		:param name: The name you give to the tread
-		"""
+        """
+        :param box: The box to crack
+        :param datafile_path: The path to the box directory
+        :param name: The name you give to the tread
+        """
         self.pro = None
         self._continue = True
         self._stopevent = threading.Event()
@@ -31,9 +31,9 @@ class WPAThread(threading.Thread):
         self.path = datafile_path
 
     def run(self) :
-		"""
-		The method which is launch when the thread is started
-		"""
+        """
+        The method which is launch when the thread is started
+        """
         key_file_name = self.box._ESSID + ".result"
         KEY = ""
         self.pro = aircrack_final_wpa(self.path)
@@ -50,16 +50,16 @@ class WPAThread(threading.Thread):
         os.killpg(self.pro.pid, signal.SIGKILL)
 
     def stop(self, timeout=None):
-		"""
-		stop the thread
-		:param timeout: optional, time you let to the thread before stopping it
-		"""
+        """
+        stop the thread
+        :param timeout: optional, time you let to the thread before stopping it
+        """
         self._continue = False
 
     def join(self, timeout=None):
-		"""
-		stop the thread
-		:param timeout: optional, time you let to the thread before stopping it
-		"""
+        """
+        stop the thread
+        :param timeout: optional, time you let to the thread before stopping it
+        """
         self._stopevent.set()
         threading.Thread.join(self, timeout)
