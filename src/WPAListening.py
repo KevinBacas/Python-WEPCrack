@@ -26,6 +26,9 @@ class WPAListening():
         self.aircrack_thread = None
 
     def startListening(self):
+	"""
+        start the listening and exectue all the processes to attack a network
+	"""
         logging.info("Starting listening on %s", self.box._ESSID)
         dir_path = "TestBox/" + self.box._ESSID
         if not os.path.isdir(dir_path):
@@ -38,6 +41,9 @@ class WPAListening():
         pass
 
     def stopListening(self):
+	"""
+        close all the processes and stop the listening
+	"""
         logging.info("Stopping listening on %s...", self.box._ESSID)
         try:
             os.killpg(self.focus_listen_pid, signal.SIGTERM)
@@ -47,4 +53,8 @@ class WPAListening():
         logging.info("Listening on %s stopped !", self.box._ESSID)
 
     def __eq__(self, other):
+	"""
+	Check if two box are equal
+	:param box: the box you're comparing with
+	"""
         return self.box == other.box

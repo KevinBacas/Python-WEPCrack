@@ -9,7 +9,7 @@ from WifiBox import WifiBox
 import logging
 
 """
-Creation des elements pour parser/stocker les donnes
+A tab to stock each network
 """
 tab_mixte = []
 
@@ -18,6 +18,8 @@ tab_mixte = []
 def sup(box_1,box_2):
     """
     Compare two WifiBox instance
+	:param box_1: first box you want to compare
+	:param box_2: second box you want to compare
 
     .. note:: A x10 factor is applyed to WEP Wi-FI because they're easyier to Hack
     """
@@ -45,9 +47,9 @@ def sup(box_1,box_2):
 
 def parsing_global():
     """
-    Parsing du fichier xml d'écoute global
-    stockage des WifiBox dans deux tableaux, tab_wep et tab_wpa
-    les autres ne sont pas garder en mémoire
+	Parsing of the xml file from global_listening
+	stock each WPA and WEP networks in tab_mixte
+	Other boxes are not keep in memory 
     """
     nom_ecoute = "TestBox/global/record"
     version = "-01"
@@ -76,10 +78,7 @@ def parsing_global():
 
 def prepare_wep_listining():
     """
-    Process dans chacun des tableaux
-    Il n'y avait pas de reseaux wep, les fonctions sont donc dans la parti wpa
-    On recupere le nom du reseau et creer un repertoire a son nom, puis on procede a une écoute locale
-    Pour avoir les clients, on recupere leur BSSID par le meme procede que pour l'ecoute globale
+	sorte tab_mixte with sup function
     """
     global tab_mixte
     tab_mixte = sorted(tab_mixte, sup)
