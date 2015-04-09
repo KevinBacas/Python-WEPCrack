@@ -1,7 +1,7 @@
-WifiBox
-=======
+ParseXML
+========
 
-.. automodule:: wifiBox
+.. automodule:: ParseXML
     :members:
     :undoc-members:
     :inherited-members:

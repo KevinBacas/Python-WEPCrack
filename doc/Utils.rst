@@ -1,7 +1,7 @@
-ParseXML
-========
+Utils
+=====
 
-.. automodule:: parseXML
+.. automodule:: Utils
     :members:
     :undoc-members:
     :inherited-members:

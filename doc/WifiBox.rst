@@ -1,7 +1,7 @@
-Utils
-=====
+WifiBox
+=======
 
-.. automodule:: utils
+.. automodule:: WifiBox
     :members:
     :undoc-members:
     :inherited-members:
